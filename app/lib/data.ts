@@ -23,26 +23,16 @@ const sql = postgres({
 import { unstable_noStore as noStore } from "next/cache";
 
 export async function fetchRevenue() {
-  // Add noStore() here prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
   noStore();
   try {
-    // Artificially delay a reponse for demo purposes.
-    // Don't do this in real life :)
-
     console.log("Fetching revenue data...");
     // await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql`SELECT * FROM revenue`;
 
     console.log("Data fetch complete after 3 seconds.");
-    // const data = await sql`SELECT * FROM revenue`;
-    // console.log("Query Result:", data);
-    // console.log(data);
-    // console.log(data);
     return data;
-    /* console.log(data.rows);
-    return data.rows; */
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch revenue data.");
@@ -58,7 +48,6 @@ export async function fetchLatestInvoices() {
       JOIN customers ON invoices.customer_id = customers.id
       ORDER BY invoices.date DESC
       LIMIT 5`;
-    // console.log(data);
     const latestInvoices = data.map((invoice: LatestInvoiceRaw) => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
@@ -88,7 +77,6 @@ export async function fetchCardData() {
       customerCountPromise,
       invoiceStatusPromise,
     ]);
-    // console.log(data);
     const numberOfInvoices = Number(data[0][0].count);
     const numberOfCustomers = Number(data[1][0].count);
     const totalPaidInvoices = formatCurrency(data[2][0].paid);
