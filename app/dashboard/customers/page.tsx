@@ -1,4 +1,5 @@
 import { FC } from "react";
+// Add metadata
 
 interface pageProps {
   // props
