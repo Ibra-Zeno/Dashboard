@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "The GraphFather",
   },
   description: "The GraphFather dashboard built using Next.js and Tailwind CSS",
-  metadataBase: new URL("https://the-graphfather.vercel.app/"),
+  // metadataBase: new URL("https://the-graphfather.vercel.app/"),
 };
 
 export default function RootLayout({
