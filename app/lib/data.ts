@@ -180,14 +180,41 @@ export async function fetchCustomers() {
   noStore();
   try {
     const data = await sql<CustomerField>`
-      SELECT
-        id,
-        name
+      SELECT *
       FROM customers
       ORDER BY name ASC
     `;
-
+    console.log(data);
     return data;
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw new Error("Failed to fetch all customers.");
+  }
+}
+export async function fetchCustomersPage() {
+  noStore();
+  try {
+    const data = await sql<CustomerField>`
+      SELECT 
+        customers.*,
+        COUNT(invoices.id) AS total_invoices,
+        SUM(CASE WHEN invoices.status = 'paid' THEN 1 ELSE 0 END) AS total_paid_invoices,
+        SUM(CASE WHEN invoices.status = 'pending' THEN 1 ELSE 0 END) AS total_pending_invoices
+      FROM customers
+      LEFT JOIN invoices ON customers.id = invoices.customer_id
+      GROUP BY customers.id
+      ORDER BY customers.name ASC
+    `;
+
+    const customers = data.map((customer: any) => ({
+      ...customer,
+      total_invoices: Number(customer.total_invoices),
+      total_paid: Number(customer.total_paid_invoices),
+      total_pending: Number(customer.total_pending_invoices),
+    }));
+
+    // console.log(customers);
+    return customers;
   } catch (err) {
     console.error("Database Error:", err);
     throw new Error("Failed to fetch all customers.");
@@ -215,7 +242,7 @@ export async function fetchFilteredCustomers(query: string) {
 		ORDER BY customers.name ASC
 	  `;
 
-    const customers = data.rows.map((customer: CustomersTable) => ({
+    const customers = data.map((customer: CustomersTable) => ({
       ...customer,
       total_pending: formatCurrency(customer.total_pending),
       total_paid: formatCurrency(customer.total_paid),
