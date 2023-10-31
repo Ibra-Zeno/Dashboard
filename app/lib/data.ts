@@ -26,12 +26,12 @@ export async function fetchRevenue() {
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
   noStore();
   try {
-    console.log("Fetching revenue data...");
+    // console.log("Fetching revenue data...");
     // await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql`SELECT * FROM revenue`;
 
-    console.log("Data fetch complete after 3 seconds.");
+    // console.log("Data fetch complete after 3 seconds.");
     return data;
   } catch (error) {
     console.error("Database Error:", error);
@@ -124,7 +124,7 @@ export async function fetchFilteredInvoices(
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-    return invoices.rows;
+    return invoices;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch invoices.");
@@ -144,8 +144,7 @@ export async function fetchInvoicesPages(query: string) {
       invoices.date::text ILIKE ${`%${query}%`} OR
       invoices.status ILIKE ${`%${query}%`}
   `;
-
-    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
     return totalPages;
   } catch (error) {
     console.error("Database Error:", error);
