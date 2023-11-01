@@ -127,7 +127,8 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
-    await signIn("credentials", Object.fromEntries(formData));
+    await signIn("Credentials", Object.fromEntries(formData));
+    // redirect("/dashboard");
   } catch (error) {
     if ((error as Error).message.includes("CredentialsSignin")) {
       return "CredentialSignin";
