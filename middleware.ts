@@ -9,3 +9,4 @@ export const config = {
     "/dashboard, /dashboard/invoices, /dashboard/customers, /dashboard/[id]/edit, /dashboard/create",
   ],
 };
+// export { default } from "next-auth/middleware";
